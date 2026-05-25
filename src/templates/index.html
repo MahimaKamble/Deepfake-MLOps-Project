@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Deepfake Detection System</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body{
+            background: linear-gradient(135deg,#0f172a,#1e293b);
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            color:white;
+        }
+
+        .container{
+            background:#111827;
+            width:550px;
+            padding:40px;
+            border-radius:20px;
+            text-align:center;
+            box-shadow:0 0 25px rgba(0,0,0,0.5);
+        }
+
+        h1{
+            margin-bottom:20px;
+            color:#38bdf8;
+        }
+
+        p{
+            margin-bottom:20px;
+            color:#cbd5e1;
+        }
+
+        input[type="file"]{
+            margin:20px 0;
+            padding:12px;
+            width:100%;
+            background:#1e293b;
+            color:white;
+            border:none;
+            border-radius:10px;
+        }
+
+        button{
+            background:#38bdf8;
+            color:black;
+            border:none;
+            padding:12px 25px;
+            border-radius:10px;
+            font-size:16px;
+            cursor:pointer;
+            margin:10px;
+            transition:0.3s;
+        }
+
+        button:hover{
+            background:#0ea5e9;
+            transform:scale(1.05);
+        }
+
+        .reset-btn{
+            background:#ef4444;
+            color:white;
+        }
+
+        .reset-btn:hover{
+            background:#dc2626;
+        }
+
+        .result{
+            margin-top:25px;
+            padding:15px;
+            border-radius:10px;
+            font-size:22px;
+            font-weight:bold;
+        }
+
+        .real{
+            background:#14532d;
+            color:#4ade80;
+        }
+
+        .fake{
+            background:#7f1d1d;
+            color:#f87171;
+        }
+
+        img{
+            width:320px;
+            margin-top:20px;
+            border-radius:15px;
+            border:3px solid #38bdf8;
+        }
+
+        .filename{
+            margin-top:10px;
+            color:#cbd5e1;
+            font-size:20px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>AI Deepfake Detection</h1>
+
+        <p>
+            Upload an image to check whether it is REAL or FAKE
+        </p>
+
+        <form action="/predict" method="POST" enctype="multipart/form-data">
+
+            <input 
+                type="file" 
+                name="file" 
+                id="fileInput"
+                accept="image/*"
+                required
+            >
+
+            <div class="filename" id="fileName">
+
+                {% if image_file %}
+                    {{ image_file }}
+                {% else %}
+                    No file selected
+                {% endif %}
+
+            </div>
+
+            <br>
+
+            <button type="submit">
+                Predict
+            </button>
+
+            <button 
+                type="button"
+                class="reset-btn"
+                onclick="resetForm()"
+            >
+                Reset
+            </button>
+
+        </form>
+
+        {% if prediction %}
+
+            <div class="result {% if prediction == 'REAL' %}real{% else %}fake{% endif %}">
+
+                Prediction: {{ prediction }}
+
+            </div>
+
+        {% endif %}
+
+        {% if image_file %}
+
+            <img 
+                id="preview"
+                src="{{ url_for('static', filename=image_file) }}"
+                style="display:block; margin-left:auto; margin-right:auto;"
+            >
+
+        {% else %}
+
+            <img id="preview" style="display:none;">
+
+        {% endif %}
+
+    </div>
+
+    <script>
+
+        const fileInput = document.getElementById("fileInput");
+        const preview = document.getElementById("preview");
+        const fileName = document.getElementById("fileName");
+
+        fileInput.addEventListener("change", function(){
+
+            const file = this.files[0];
+
+            if(file){
+
+                fileName.textContent = file.name;
+
+                const reader = new FileReader();
+
+                reader.onload = function(e){
+
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                }
+
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function resetForm(){
+
+            fileInput.value = "";
+
+            preview.style.display = "none";
+
+            fileName.textContent = "No file selected";
+
+            window.location.href = "/";
+        }
+
+    </script>
+
+</body>
+
+</html>

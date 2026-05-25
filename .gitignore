@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+mlruns/
+dataset/
+
+models/
+*.pkl
+
+.env

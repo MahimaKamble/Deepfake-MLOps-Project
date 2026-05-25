@@ -1,0 +1,12 @@
+venv/
+dataset/
+mlruns/
+screenshots/
+__pycache__/
+*.pyc
+.git/
+.ipynb_checkpoints/
+*.h5
+*.pt
+*.pth
+*.pkl
