@@ -100,3 +100,4 @@ if __name__ == "__main__":
 
    # webhook test 
    # webhook working test
+   # automatic trigger test
