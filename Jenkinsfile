@@ -3,24 +3,13 @@ pipeline {
 
     stages {
 
-        stage('Build Docker Image') {
+        stage('Test EC2 Connection') {
             steps {
-                bat 'docker build -t deepfake-mlops .'
-            }
-        }
-
-        stage('Run Container') {
-            steps {
-                bat '''
-                docker rm -f deepfake-container || exit 0
-                docker run -d -p 5000:5000 --name deepfake-container deepfake-mlops
-                '''
-            }
-        }
-
-        stage('Verify Container') {
-            steps {
-                bat 'docker ps'
+                sshagent(credentials: ['ec2-key']) {
+                    bat '''
+                    ssh -o StrictHostKeyChecking=no ec2-user@51.21.169.193 "hostname"
+                    '''
+                }
             }
         }
     }
