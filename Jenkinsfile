@@ -1,17 +1,14 @@
 pipeline {
-agent any
+    agent any
 
-```
-stages {
+    stages {
 
-    stage('Deploy with Ansible') {
-        steps {
-            bat '''
-            wsl bash -c "cd /home/mahima/ansible-project && ansible-playbook -i inventory.ini deploy_real.yml"
-            '''
+        stage('Deploy with Ansible') {
+            steps {
+                bat '''
+                wsl bash -c "cd /home/mahima/ansible-project && ansible-playbook -i inventory.ini deploy_real.yml"
+                '''
+            }
         }
     }
-}
-```
-
 }
