@@ -1,16 +1,17 @@
 pipeline {
-    agent any
+agent any
 
-    stages {
+```
+stages {
 
-        stage('Test EC2 Connection') {
-            steps {
-                sshagent(credentials: ['ec2-key']) {
-                    bat '''
-                    ssh -o StrictHostKeyChecking=no ec2-user@51.21.169.193 "hostname"
-                    '''
-                }
-            }
+    stage('Deploy with Ansible') {
+        steps {
+            bat '''
+            wsl bash -c "cd /home/mahima/ansible-project && ansible-playbook -i inventory.ini deploy_real.yml"
+            '''
         }
     }
+}
+```
+
 }
